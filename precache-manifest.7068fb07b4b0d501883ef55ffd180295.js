@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "42ea39c9cc227e4e9b21bfdf5c397c98",
+    "revision": "22e12b5587685eaeb2e089114d7b4f8b",
     "url": "/bakerywala/index.html"
   },
   {
