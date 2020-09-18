@@ -1,5 +1,6 @@
 {
   "proxy": "http://localhost:4000",
+  "homepage": "https://ashok-sahu.github.io/bakerywala",
   "name": "bakerywala",
   "version": "0.1.0",
   "private": true,
@@ -35,8 +36,8 @@
     "yup": "^0.29.3"
   },
   "scripts": {
-    "predeploy":"npm run build",
-    "deploy":"gh-pages -d build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
