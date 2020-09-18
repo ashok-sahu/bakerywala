@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const chalk = require("chalk");
+const path = require('path')
+const express = require('express')
 const app = require("./server/app");
 
 dotenv.config({ path: "./.env" });
@@ -22,9 +24,11 @@ mongoose
     console.log(chalk.red(`database connection failed!`));
   });
 
-app.use("/", (req, res) => {
-  res.send("hello world");
-});
+
+
+// app.use("/", (req, res) => {
+//   res.send("hello world");
+// });
 
 app.listen(PORT, () => {
   console.log(
