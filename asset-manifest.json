@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/bakerywala/static/js/main.4761d3e2.chunk.js",
-    "main.js.map": "/bakerywala/static/js/main.4761d3e2.chunk.js.map",
+    "main.js": "/bakerywala/static/js/main.7530146c.chunk.js",
+    "main.js.map": "/bakerywala/static/js/main.7530146c.chunk.js.map",
     "runtime-main.js": "/bakerywala/static/js/runtime-main.b7ac694e.js",
     "runtime-main.js.map": "/bakerywala/static/js/runtime-main.b7ac694e.js.map",
-    "static/js/2.b066a499.chunk.js": "/bakerywala/static/js/2.b066a499.chunk.js",
-    "static/js/2.b066a499.chunk.js.map": "/bakerywala/static/js/2.b066a499.chunk.js.map",
+    "static/js/2.e56738ce.chunk.js": "/bakerywala/static/js/2.e56738ce.chunk.js",
+    "static/js/2.e56738ce.chunk.js.map": "/bakerywala/static/js/2.e56738ce.chunk.js.map",
     "index.html": "/bakerywala/index.html",
-    "precache-manifest.b3b33a38d8afce7c45cf0801cf5d77aa.js": "/bakerywala/precache-manifest.b3b33a38d8afce7c45cf0801cf5d77aa.js",
+    "precache-manifest.9e41cb83d870b4f4b82ac95bf23f0fc2.js": "/bakerywala/precache-manifest.9e41cb83d870b4f4b82ac95bf23f0fc2.js",
     "service-worker.js": "/bakerywala/service-worker.js",
-    "static/js/2.b066a499.chunk.js.LICENSE.txt": "/bakerywala/static/js/2.b066a499.chunk.js.LICENSE.txt"
+    "static/js/2.e56738ce.chunk.js.LICENSE.txt": "/bakerywala/static/js/2.e56738ce.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.b7ac694e.js",
-    "static/js/2.b066a499.chunk.js",
-    "static/js/main.4761d3e2.chunk.js"
+    "static/js/2.e56738ce.chunk.js",
+    "static/js/main.7530146c.chunk.js"
   ]
 }
