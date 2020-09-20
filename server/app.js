@@ -21,7 +21,6 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../client/public", "index.html"));
 });
 
-
 //routing
 app.use('/api',userAuthRoute)
 
