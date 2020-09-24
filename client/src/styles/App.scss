@@ -1,0 +1,17 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+@font-face{
+    font-family: myFont;
+    src: url('../assets/fonts/Audiowide.ttf');
+}
+@font-face{
+    font-family: myFont2;
+    src: url('../assets/fonts/BerkshireSwash.ttf');
+}

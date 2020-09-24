@@ -1,29 +1,31 @@
 const express = require('express')
 const morgan = require('morgan')
-const path = require('path')
 const cors = require('cors')
 const app = express()
 
-//routes
-const userAuthRoute = require('./routes/UserAuthRoutes')
-
-if (process.env.NODE_ENV === 'development') {
-    app.use(morgan('dev'));
-}
-
 //middlewares
-app.enable("trust proxy");
+app.enable('trust proxy')
+app.use(express.urlencoded({extended:true}))
 app.use(express.json())
-app.use(cors())
-app.options("*", cors());
-app.use(express.static(`${__dirname}/public`));
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../client/public", "index.html"));
-});
+app.use((req,res,next)=>{
+    req.requestTime = new Date().toISOString()
+    next()
+})
 
-//routing
-app.use('/api',userAuthRoute)
-
-
+//routes
+app.use('/',(req,res)=>{
+    res.status(200).json({
+        status:'success',
+        requestedAt: req.requestTime,
+        data: 'hello world',
+    })
+})
+//page not found
+app.use((req,res)=>{
+    res.status(404).json({
+        success:false,
+        message:'Page Not Found!'
+    })
+})
 
 module.exports = app
