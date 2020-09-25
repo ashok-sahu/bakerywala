@@ -7,9 +7,9 @@ exports.validSign = [
       max: 32,
     })
     .withMessage("name must be between 3 to 32 characters"),
-    check("email").isEmail().withMessage("Must be a valid email address"),
-    check("password", "password is required").notEmpty(),
-    check("password")
+  check("email").isEmail().withMessage("Must be a valid email address"),
+  check("password", "password is required").notEmpty(),
+  check("password")
     .isLength({
       min: 6,
     })

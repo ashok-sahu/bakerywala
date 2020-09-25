@@ -6,106 +6,167 @@ const fetch = require("node-fetch");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 const sgMail = require("@sendgrid/mail");
-// sgMail.setApiKey(process.env.MAIL_KEY)
 
-const nodemailer = require('nodemailer')
+const nodemailer = require("nodemailer");
 //custom error handers
 const { errorHandler } = require("../helpers/dbErrorHandling");
 
-exports.registerUser = (req, res) => {
+exports.registerController = (req, res) => {
   const { name, email, password } = req.body;
-  const errors = validationResult(req)
+  const errors = validationResult(req);
 
-  if(!errors.isEmpty()){
-      const firstError = errors.array().map(error=>error.msg)[0]
-      return res.status(422).json({
-          error:firstError
-      })
-  }else{
-      User.findOne({email}).exec((err,user)=>{
-          //if user exists
-          if(user){
-              return res.status(400).json({
-                  error:'Email is Taken'
-              })
-          }
-      })
+  if (!errors.isEmpty()) {
+    const firstError = errors.array().map((error) => error.msg)[0];
+    return res.status(422).json({
+      error: firstError,
+    });
+  } else {
+    User.findOne({ email }).exec((err, user) => {
+      //if user exists
+      if (user) {
+        return res.status(400).json({
+          error: "Email is Taken",
+        });
+      }
+    });
 
-      //generate a token
-      const token = jwt.sign({
-          name,email,password
-      },process.env.JWT_ACCOUNT_ACTIVATION,{expiresIn:'15m'})
+    //generate a token
+    const token = jwt.sign(
+      {
+        name,
+        email,
+        password,
+      },
+      process.env.JWT_ACCOUNT_ACTIVATION,
+      { expiresIn: "15m" }
+    );
 
-      let transporter = nodemailer.createTransport({
-        host: "smtp.googlemail.com",
-        port: 587,
-        secure:false,
-        auth: {
-          user: "ashoksahu1105@gmail.com",
-          pass: "ashok$1111",
-        },
-        tls: {
-          rejectUnauthorized: false,
-        },
-      });
+    let transporter = nodemailer.createTransport({
+      host: "smtp.googlemail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: "ashoksahu1105@gmail.com",
+        pass: "ashok$1111",
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
 
-    //   let to_email = req.body.to_email;
-    //   let mail_subject = req.body.mail_subject;
-    //   let message = req.body.message;
-    //   let attach = req.body.attach;
-      let messageOptions = {
-        from: `ashoksahu <${process.env.EMAIL_FROM}>`,
-        to: email,
-        subject: 'Account Activation Link',
-        // text: message
-        html: `
+    let messageOptions = {
+      from: `ashoksahu <${process.env.EMAIL_FROM}>`,
+      to: email,
+      subject: "Account Activation Link",
+      html: `
         <h1> Please Click The Link To Active </h1>
-        <p> ${process.env.CLIENT_URL}/users/active/${token} </p>
+        <p> ${process.env.CLIENT_URL}/users/activate/${token} </p>
         <hr/>
         <p>This Email contains Sensetive Info</p>
         <p>${process.env.CLIENT_URL}</p>
         `,
-      };
-    //   if (attach) {
-    //     messageOptions = {
-    //       ...messageOptions,
-    //       attachments: [
-    //         {
-    //           filename: "Promotion.jpg",
-    //           path: "./Promotion.jpg",
-    //         },
-    //       ],
-    //     };
-    //   }
-      transporter.sendMail(messageOptions, (error, info) => {
-        if (error) {
-          return console.log(error);
-        }
-        console.log("Message %s sent: %s", info.messageId, info.response);
-        res.redirect("/");
-      })
+    };
+    transporter.sendMail(messageOptions, (error, info) => {
+      if (error) {
+        return console.log(error);
+      }
+      console.log("Message %s sent: %s", info.messageId, info.response);
+      res.redirect("/");
+    });
+  }
+};
 
-      //email data sending
-    //   const emaildata = {
-    //       from:process.env.EMAIL_FROM,
-    //       to:email,
-    //       subject:'Account Activation Link',
-    //       html:`
-    //       <h1> Please Click The Link To Active </h1>
-    //       <p> ${process.env.CLIENT_URL}/users/active/${token} </p>
-    //       <hr/>
-    //       <p>This Email contains Sensetive Info</p>
-    //       <p>${process.env.CLIENT_URL}</p>
-    //       `
-    //   }
-    //   sgMail.send(emaildata).then(sent=>{
-    //       return res.json({
-    //           message:`Email has been sent to ${email}`
-    //       })
-    //   }).catch(error=>{
-    //       return res.status(400).json({
-    //           error:errorHandler(error)
-    //       })
-    //   })
+
+//activation and save to database
+exports.activationController = (req, res) => {
+  const { token } = req.body;
+
+  if (token) {
+    jwt.verify(token, process.env.JWT_ACCOUNT_ACTIVATION, (err, decoded) => {
+      if (err) {
+        console.log("Activation error");
+        return res.status(401).json({
+          errors: "Expired link. Signup again",
+        });
+      } else {
+        const { name, email, password } = jwt.decode(token);
+
+        console.log(email);
+        const user = new User({
+          name,
+          email,
+          password,
+        });
+
+        user.save((err, user) => {
+          if (err) {
+            console.log("Save error", errorHandler(err));
+            return res.status(401).json({
+              errors: errorHandler(err),
+            });
+          } else {
+            return res.json({
+              success: true,
+              data: user,
+              message: "Signup success",
+            });
+          }
+        });
+      }
+    });
+  } else {
+    return res.json({
+      message: "error happening please try again",
+    });
+  }
+};
+
+
+exports.signinController = (req, res) => {
+  const { email, password } = req.body;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const firstError = errors.array().map(error => error.msg)[0];
+    return res.status(422).json({
+      errors: firstError
+    });
+  } else {
+    // check if user exist
+    User.findOne({
+      email
+    }).exec((err, user) => {
+      if (err || !user) {
+        return res.status(400).json({
+          errors: 'User with that email does not exist. Please signup'
+        });
+      }
+      // authenticate
+      if (!user.authenticate(password)) {
+        return res.status(400).json({
+          errors: 'Email and password do not match'
+        });
+      }
+      // generate a token and send to client
+      const token = jwt.sign(
+        {
+          _id: user._id
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: '7d'
+        }
+      );
+      const { _id, name, email, role } = user;
+
+      return res.json({
+        token,
+        user: {
+          _id,
+          name,
+          email,
+          role
+        }
+      });
+    });
   }
 };

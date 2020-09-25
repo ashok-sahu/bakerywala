@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import { authenticate, isAuth } from "../../helpers/auth";
-import Axios from "axios";
-import { Redirect } from "react-router-dom";
-import dotenv from 'dotenv'
-import authSvg from '../../assets/images/auth.svg'
-dotenv.config({path:'./config/example.env'})
+import authSvg from "../assets/auth.svg";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import { authenticate, isAuth } from "../helpers/auth";
+import { Link, Redirect } from "react-router-dom";
+import {REACT_APP_API_URL} from '../config/ApiConfig'
 
-
-const SignUp = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,15 +19,13 @@ const SignUp = () => {
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
-
-  console.log(process.env,'client')
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && email && password1) {
       if (password1 === password2) {
         setFormData({ ...formData, textChange: "Submitting" });
-        Axios
-          .post(`${process.env.REACT_APP_API_URL}/register`, {
+        axios
+          .post(`${REACT_APP_API_URL}/register`, {
             name,
             email,
             password: password1,
@@ -43,8 +39,8 @@ const SignUp = () => {
               password2: "",
               textChange: "Submitted",
             });
-
-            toast.success(res.data.message);
+            console.log(res);
+            toast.success('mail sent successfully');
           })
           .catch((err) => {
             setFormData({
@@ -56,7 +52,7 @@ const SignUp = () => {
               textChange: "Sign Up",
             });
             console.log(err.response);
-            toast.error(err.response.data.errors);
+            toast.error(err.response.data.error);
           });
       } else {
         toast.error("Passwords don't matches");
@@ -65,15 +61,18 @@ const SignUp = () => {
       toast.error("Please fill all fields");
     }
   };
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       {isAuth() ? <Redirect to="/" /> : null}
+      <ToastContainer />
       <div className="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div className="mt-12 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-extrabold">
               Sign Up for Congar
             </h1>
+
             <form
               className="w-full flex-1 mt-8 text-indigo-500"
               onSubmit={handleSubmit}
@@ -123,7 +122,7 @@ const SignUp = () => {
               <div className="flex flex-col items-center">
                 <a
                   className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3
-       bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
+           bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
                   href="/login"
                   target="_self"
                 >
@@ -141,9 +140,9 @@ const SignUp = () => {
           ></div>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };
 
-export default SignUp;
+export default Register;
+

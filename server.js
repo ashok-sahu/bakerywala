@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const chalk = require("chalk");
 const app = require("./server/app");
-dotenv.config({ path: "./server/config/config.env" });
+dotenv.config({ path: "./server/config/config.example.env" });
 
 const PORT = process.env.PORT || 5000;
 // const LOCAL_DB = process.env.DB;

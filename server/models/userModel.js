@@ -1,73 +1,72 @@
-const mongoose = require("mongoose");
-// const { authenticate } = require("passport");
-
-const UserSchema = new mongoose.Schema(
+const mongoose = require('mongoose');
+const crypto = require('crypto');
+// user schema
+const userScheama = new mongoose.Schema(
   {
     email: {
       type: String,
+      trim: true,
       required: true,
       unique: true,
-      trim: true,
-      lowercase: true,
+      lowercase: true
     },
     name: {
       type: String,
-      required: true,
       trim: true,
+      required: true
     },
     hashed_password: {
       type: String,
-      required: true,
+      required: true
     },
     salt: String,
     role: {
       type: String,
-      default: "admin",
-      //we have more type (normal,user...)
+      default: 'subscriber'
     },
     resetPasswordLink: {
       data: String,
-      default: "",
-    },
+      default: ''
+    }
   },
-  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
+  {
+    timestamps: true
+  }
 );
 
-//virtual password
-UserSchema.virtual("password")
-  .set(function (password) {
-    //set password note you must use normal function not arrow function
-    this.password = password;
+// virtual
+userScheama
+  .virtual('password')
+  .set(function(password) {
+    this._password = password;
     this.salt = this.makeSalt();
     this.hashed_password = this.encryptPassword(password);
   })
-  .get(function () {
+  .get(function() {
     return this._password;
   });
 
-//methods
-UserSchema.methods = {
-  //generate salt
-  makeSalt: function () {
-    return Math.round(new Date().valueOf() * Math.random() + "");
+// methods
+userScheama.methods = {
+  authenticate: function(plainText) {
+    return this.encryptPassword(plainText) === this.hashed_password;
   },
-  //encrypt password
-  encryptPassword: function (password) {
-    if (!password) return "";
+
+  encryptPassword: function(password) {
+    if (!password) return '';
     try {
       return crypto
-        .createHmac("sha1", this.salt)
+        .createHmac('sha1', this.salt)
         .update(password)
-        .digest("hex");
+        .digest('hex');
     } catch (err) {
-      return "";
+      return '';
     }
   },
-  //compare password between plain get from user and hashed
-  authenticate: function (plainPassword) {
-    return this.encryptPassword(plainPassword) === this.hashed_password;
-  },
+
+  makeSalt: function() {
+    return Math.round(new Date().valueOf() * Math.random()) + '';
+  }
 };
 
-const User = mongoose.model("User", UserSchema);
-module.exports = User;
+module.exports = mongoose.model('User', userScheama);
