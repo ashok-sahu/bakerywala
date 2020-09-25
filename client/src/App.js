@@ -1,13 +1,11 @@
-import React from "react";
-import { Login } from "./screens/index";
-import './styles/App.scss'
+import React from 'react'
 
 function App() {
   return (
     <div>
-      <Login />
+      hello
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
