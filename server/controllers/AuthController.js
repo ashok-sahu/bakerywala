@@ -1,16 +1,16 @@
 const User = require("../models/userModel");
+const client = require("../config/TwilioConfig");
 const expressJwt = require("express-jwt");
 const _ = require("lodash");
 const { OAuth2Client } = require("google-auth-library");
 const fetch = require("node-fetch");
 const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-const sgMail = require("@sendgrid/mail");
-
+const TwilioSms = require("twilio")(client.accountSID, client.authToken);
 const nodemailer = require("nodemailer");
 //custom error handers
 const { errorHandler } = require("../helpers/dbErrorHandling");
-
+const twilio = require("twilio");
 exports.registerController = (req, res) => {
   const { name, email, password } = req.body;
   const errors = validationResult(req);
@@ -76,7 +76,6 @@ exports.registerController = (req, res) => {
   }
 };
 
-
 //activation and save to database
 exports.activationController = (req, res) => {
   const { token } = req.body;
@@ -121,39 +120,38 @@ exports.activationController = (req, res) => {
   }
 };
 
-
 exports.signinController = (req, res) => {
   const { email, password } = req.body;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const firstError = errors.array().map(error => error.msg)[0];
+    const firstError = errors.array().map((error) => error.msg)[0];
     return res.status(422).json({
-      errors: firstError
+      errors: firstError,
     });
   } else {
     // check if user exist
     User.findOne({
-      email
+      email,
     }).exec((err, user) => {
       if (err || !user) {
         return res.status(400).json({
-          errors: 'User with that email does not exist. Please signup'
+          errors: "User with that email does not exist. Please signup",
         });
       }
       // authenticate
       if (!user.authenticate(password)) {
         return res.status(400).json({
-          errors: 'Email and password do not match'
+          errors: "Email and password do not match",
         });
       }
       // generate a token and send to client
       const token = jwt.sign(
         {
-          _id: user._id
+          _id: user._id,
         },
         process.env.JWT_SECRET,
         {
-          expiresIn: '7d'
+          expiresIn: "7d",
         }
       );
       const { _id, name, email, role } = user;
@@ -164,9 +162,29 @@ exports.signinController = (req, res) => {
           _id,
           name,
           email,
-          role
-        }
+          role,
+        },
       });
     });
   }
+};
+
+exports.sendOtp = (req, res) => {
+  TwilioSms.verify
+    .services(client.serviceID)
+    .verifications.create({
+      to: `+${req.query.phonenumber}`,
+      channel: req.query.channel,
+    })
+    .then((data) => res.status(200).send(data));
+};
+
+exports.verifyOtp = (req, res) => {
+  TwilioSms.verify
+    .services(client.serviceID)
+    .verificationChecks.create({
+      to: `+${req.query.phonenumber}`,
+      code: req.query.code,
+    })
+    .then((data) => res.status(200).send(data));
 };

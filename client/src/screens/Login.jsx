@@ -65,7 +65,6 @@ const Login = ({ history }) => {
   // };
 
   const handleSubmit = e => {
-    console.log(REACT_APP_API_URL);
     e.preventDefault();
     if (email && password1) {
       setFormData({ ...formData, textChange: 'Submitting' });
@@ -76,18 +75,18 @@ const Login = ({ history }) => {
         })
         .then(res => {
           console.log(res.data)
-          // authenticate(res, () => {
-          //   // setFormData({
-          //   //   ...formData,
-          //   //   email: '',
-          //   //   password1: '',
-          //   //   textChange: 'Submitted'
-          //   // });
-          //   // isAuth() && isAuth().role === 'admin'
-          //   //   ? history.push('/admin')
-          //   //   : history.push('/private');
-          //   toast.success(`Hey ${res.data.user.name}, Welcome back!`);
-          // });
+          authenticate(res, () => {
+            setFormData({
+              ...formData,
+              email: '',
+              password1: '',
+              textChange: 'Submitted'
+            });
+            isAuth() && isAuth().role === 'admin'
+              ? history.push('/admin')
+              : history.push('/private');
+            toast.success(`Hey ${res.data.user.name}, Welcome back!`);
+          });
         })
         .catch(err => {
           setFormData({
@@ -97,7 +96,7 @@ const Login = ({ history }) => {
             textChange: 'Sign In'
           });
           console.log(err.response);
-          // toast.error(err.response.data.errors);
+          toast.error(err.response.data.errors);
         });
     } else {
       toast.error('Please fill all fields');

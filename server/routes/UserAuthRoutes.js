@@ -8,12 +8,16 @@ const {
 const {
   registerController,
   activationController,
-  signinController
+  signinController,
+  sendOtp,
+  verifyOtp
 } = require("../controllers/AuthController");
 
 router
+  .get("/sendotp", sendOtp)
+  .get("/veryfyotp",verifyOtp)
   .post("/register", validSign, registerController)
   .post("/activation", activationController)
-  .post('/login',validLogin,signinController)
+  .post("/login", validLogin, signinController);
 
 module.exports = router;
