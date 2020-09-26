@@ -3,7 +3,7 @@ import authSvg from '../assets/update.svg';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { updateUser, isAuth, getCookie, signout } from '../helpers/auth';
-
+import {REACT_APP_API_URL} from '../config/ApiConfig'
 const Private = ({ history }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -20,7 +20,7 @@ const Private = ({ history }) => {
   const loadProfile = () => {
     const token = getCookie('token');
     axios
-      .get(`${process.env.REACT_APP_API_URL}/user/${isAuth()._id}`, {
+      .get(`${REACT_APP_API_URL}/user/${isAuth()._id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -28,6 +28,7 @@ const Private = ({ history }) => {
       .then(res => {
         const { role, name, email } = res.data;
         setFormData({ ...formData, role, name, email });
+        console.log(res)
       })
       .catch(err => {
         toast.error(`Error To Your Information ${err.response.statusText}`);
@@ -38,18 +39,18 @@ const Private = ({ history }) => {
         }
       });
   };
+
   const { name, email, password1, textChange, role } = formData;
   const handleChange = text => e => {
     setFormData({ ...formData, [text]: e.target.value });
   };
   const handleSubmit = e => {
     const token = getCookie('token');
-    console.log(token);
     e.preventDefault();
     setFormData({ ...formData, textChange: 'Submitting' });
     axios
       .put(
-        `${process.env.REACT_APP_API_URL}/user/update`,
+        `${REACT_APP_API_URL}/user/update`,
         {
           name,
           email,
@@ -66,6 +67,7 @@ const Private = ({ history }) => {
           toast.success('Profile Updated Successfully');
           setFormData({ ...formData, textChange: 'Update' });
         });
+        console.log(res)
       })
       .catch(err => {
         console.log(err.response);

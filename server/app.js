@@ -4,7 +4,7 @@ const cors = require("cors");
 const app = express();
 
 //routings
-const authRoute = require("./routes/UserAuthRoutes");
+const authRoute = require("./routes/Auth.route");
 
 //middlewares
 app.enable("trust proxy");

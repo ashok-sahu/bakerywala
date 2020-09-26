@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import authSvg from '../assets/forget.svg';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+import {REACT_APP_API_URL} from '../config/ApiConfig'
 
 const ForgetPassword = ({history}) => {
   const [formData, setFormData] = useState({
@@ -17,17 +18,16 @@ const ForgetPassword = ({history}) => {
     if (email) {
       setFormData({ ...formData, textChange: 'Submitting' });
       axios
-        .put(`${process.env.REACT_APP_API_URL}/forgotpassword`, {
+        .put(`${REACT_APP_API_URL}/forgotpassword`, {
           email
         })
         .then(res => {
-          
             setFormData({
               ...formData,
               email: '',
             });
-            toast.success(`Please check your email`);
-          
+            toast.success(`${res.data.message}`);
+            console.log(res)
         })
         .catch(err => {
         console.log(err.response)

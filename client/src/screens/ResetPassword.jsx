@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import authSvg from '../assets/reset.svg';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+import {REACT_APP_API_URL} from '../config/ApiConfig'
+
 const ResetPassword = ({match}) => {
   const [formData, setFormData] = useState({
       password1: '',
@@ -22,12 +24,11 @@ const ResetPassword = ({match}) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
     const handleSubmit = e => {
-      console.log(password1, password2)
     e.preventDefault();
     if ((password1 === password2) && password1 && password2) {
       setFormData({ ...formData, textChange: 'Submitting' });
       axios
-        .put(`${process.env.REACT_APP_API_URL}/resetpassword`, {
+        .put(`${REACT_APP_API_URL}/resetpassword`, {
             newPassword: password1,
             resetPasswordLink: token
         })
@@ -39,7 +40,6 @@ const ResetPassword = ({match}) => {
               password2: ''
             });
             toast.success(res.data.message);
-          
         })
         .catch(err => {
           toast.error('Something is wrong try again');
