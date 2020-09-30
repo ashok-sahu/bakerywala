@@ -11,7 +11,7 @@ const Login = () => {
     return container.classList.add("sign-up-mode");
   };
   return (
-    <div className="container" id="a">
+    <div className="container col-12" id="a" >
       <div className="forms-container">
         <div className="signin-signup">
           <form action="#" className="sign-in-form">

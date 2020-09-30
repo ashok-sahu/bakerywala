@@ -1,17 +1,131 @@
-body{
+body {
     margin: 0;
     padding: 0;
+    list-style-type: none;
 }
 
-*{
+* {
     box-sizing: border-box;
 }
 
-@font-face{
-    font-family: myFont;
+
+::-webkit-scrollbar {
+    width: 10px;
+    border: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #d6872c;
+    border-radius: 10px;
+}
+
+@font-face {
+    font-family: Audiowide;
     src: url('../assets/fonts/Audiowide.ttf');
 }
-@font-face{
-    font-family: myFont2;
+
+@font-face {
+    font-family: BerkshireSwash;
     src: url('../assets/fonts/BerkshireSwash.ttf');
+}
+
+@font-face {
+    font-family: jura;
+    src: url('../assets/fonts/Jura.ttf');
+}
+
+@font-face {
+    font-family: Poppins;
+    src: url('../assets/fonts/Poppins.ttf');
+}
+
+@font-face {
+    font-family: SansitaSwashed;
+    src: url('../assets/fonts/SansitaSwashed.ttf');
+}
+
+.carousel-item{
+    height: 100vh;
+    min-height: 300px;
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover ;
+    background-size: cover;
+}
+.carousel-caption{
+    bottom: 220px;
+}
+.carousel-caption h3{
+    font-size: 45px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 20px;
+    font-family: BerkshireSwash;
+    color:yellow
+}
+.carousel-caption p{
+    width: 60%;
+    margin: auto;
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+.navbar-nav a {
+    font-size: 18px;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: Jura;
+    color: white;
+}
+.navbar-light .navbar-brand{
+    color: #fff;
+    font-size: 25px;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 2px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.navbar-light .navbar-nav .active> .nav-link .navbar-light .navbar-nav .nav-link.active,
+.navbar-light .navbar-nav .nav-link.show .navbar-light .navbar-nav .show>.nav-link{
+    color:#fff
+}
+
+.navbar-light .navbar-nav .nav-link{
+    color: #fff;
+}
+.navbar-nav{
+    text-align: center;
+}
+.nav-link{
+    padding: .2rem 1rem;
+}
+
+.nav-link.active,.nav-link:focus,.nav-link.active,.nav-link:hover{
+    color:yellow !important;
+}
+
+.brgt{
+    animation: bounceInRight; /* referring directly to the animation's @keyframe declaration */
+    animation-duration: 1s
+}
+.blt{
+    animation: bounceInLeft; /* referring directly to the animation's @keyframe declaration */
+    animation-duration: 2s
+}
+@media only screen and(max-width:767px){
+    .navbar-nav.ml-auto{
+        background: rgba(0, 0, 0,.5);
+        border-radius: 10px;
+    }
+    .navbar-toggler{
+        padding:1px 5px;
+        font-size: 18px;
+        line-height: .3;
+        background: rgba(16, 165, 170, 0.603);
+        border: none;
+        outline: none;
+        border-radius: 10px;
+    }
 }
